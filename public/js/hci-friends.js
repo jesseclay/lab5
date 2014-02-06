@@ -10,6 +10,40 @@ $(document).ready(function() {
  */
 function initializePage() {
 	console.log("Javascript connected!");
+	$('.name').click(nameToAnagram);
+	$('#addFriendForm').submit(addFriend);
+}
+
+function addFriend(e) {
+	e.preventDefault();
+	$.ajax({
+    url: this.action,
+    method: this.method,
+    data: $(this).serialize()
+  }).done(function(msg) {
+  	
+  	var friend_template = $('.col-xs-4').last().clone();
+  	var url = msg["imageURL"];
+  	var name = msg['name'];
+  	var description = msg['description'];
+
+  	var img = $(friend_template).find("img");
+  	img.attr('alt', name);
+  	img.attr('src', url);
+
+		$(friend_template).find(".name").text(name);
+  	$(friend_template).find("p").text(description);
+
+  	$(".friendList").append(friend_template);
+  });
+}
+
+
+function nameToAnagram(e) {
+		e.preventDefault();
+		var name = $(this).text();
+		var anagram = anagrammedName(name);
+		$(this).text(anagram);
 }
 
 function anagrammedName(name) {
